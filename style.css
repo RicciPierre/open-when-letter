@@ -359,7 +359,7 @@ a {
     .christmas-postmark {
         display: none;
     }
-}
+
 
     .calendar-footer {
     margin-top: 25px;
@@ -377,43 +377,52 @@ a {
 
     .letter-page {
         width: 100%;
-        padding: 15px 0;
+        padding: 10px 0;
+        overflow-x: clip;
     }
 
     .letter-container {
-        width: 98vw;
-        max-width: 100%;
+        position: relative;
+        width: 100%;
+        max-width: none;
         margin: 0 auto;
+
     }
 
     .opening-gif {
-        width: 100%;
+        display: block;
+        width: 145%;
+        max-width: none;
         height: auto;
+        margin-left: -22.5%;
+
     }
 
     .letter-text {
-        width: 58%;
-        max-height: 65%;
-        overflow-y: auto;
+        width: 75%;
+        max-height: 50%;
+
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
+
+        overflow-y: auto;
+        text-align: center;
     }
 
     .letter-text h1 {
-        font-size: clamp(18px, 5.2vw, 26px);
+        font-size: clamp(20px, 5.5vw, 28px);
+        margin-bottom: 20px;
         line-height: 1.2;
-        margin-bottom: 18px;
     }
 
     .letter-text p {
-        font-size: clamp(14px, 3.8vw, 19px);
+        font-size: clamp(15px, 4vw, 19px);
         line-height: 1.6;
     }
 
     .back-link {
-        margin-top: 15px;
-        margin-bottom: 15px;
+        margin: 15px auto 25px;
     }
 }
 
