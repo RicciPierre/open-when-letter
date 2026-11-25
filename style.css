@@ -8,7 +8,7 @@ body {
     margin: 0;
     min-height: 100vh;
 
-    background-image: url("images/bg.jpg");
+    background-image: url("images/background.gif");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -35,7 +35,7 @@ a {
     height: 780px;
     max-height: 90vh;
 
-    background: rgba(255, 241, 243, 0.94);
+    background: rgba(255, 241, 243, 0.487);
 
     border-radius: 35px;
     padding: 60px 70px;
@@ -68,16 +68,16 @@ a {
 .envelope-grid {
     display: grid;
 
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
     gap: 45px 60px;
-    width: 650px;
+    width: 50vw;
     max-width: 100%;
     margin: 0 auto;
 }
 
 .envelope {
-    width: 260px;
+    width: 50vw;
     justify-self: center;
     text-align: center;
     text-decoration: none;
@@ -87,18 +87,20 @@ a {
 .envelope img {
     display: block;
 
-    width: 250px;
-    height: 185px;
+    width: 50vw;
+    height: 285px;
     margin: 0 auto;
 
     object-fit: contain;
 }
 
+/*
 .envelope p {
     margin: 12px 0 0;
     font-size: 17px;
     line-height: 1.4;
 }
+*/
 
 .envelope:hover {
     transform: translateY(-6px);
