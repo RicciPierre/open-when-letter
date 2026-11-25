@@ -274,18 +274,8 @@ a {
 
   .home {
     width: 90vw;
-
-    height: 80vh;
-
-    padding: 40px 15px;
-
-    border-radius: 25px;
-
-    overflow-y: auto;
-
-    position: relative;
-
-    border: 1px solid rgba(180, 154, 135, 0.6);
+    padding: 35px 15px;
+    margin: 0 auto;
 
     box-shadow:
     inset 0 0 0 7px rgba(255, 248, 237, 0.3),
@@ -301,61 +291,80 @@ a {
     display: none;
   }
 
-  .home h1 {
-    font-size: clamp(18px, 6vw, 26px);
-    padding: 16px 20px;
-    margin-bottom: 30px;
-    max-width: 95%;
-  }
+ .calendar-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
 
-  .home > p {
-    margin-bottom: 30px;
-  }
+        width: 100%;
+        margin: 0 auto 35px;
+        text-align: center;
+    }
 
-  /* ENVELOPES */
-
-  .calendar-header {
-    margin-bottom: 25px;
-  }
-
-    .christmas-postmark {
-    display: none;
+    .home h1 {
+        width: fit-content;
+        max-width: 100%;
+        margin: 0 auto 25px;
     }
 
     .christmas-ornament {
-    font-size: 16px;
-    letter-spacing: 2px;
+        width: 100%;
+        text-align: center;
     }
 
     .christmas-divider {
-    width: 90%;
-    margin: 15px auto 25px;
+        width: 85%;
+        margin: 10px auto 25px;
     }
+
+    /* Centre the envelope grid */
 
     .envelope-grid {
-    grid-template-columns: 1fr;
-    width: 85%;
-    max-width: 350px;
-    gap: 25px;
-    justify-items: center;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+
+        width: 100%;
+        max-width: 100%;
+
+        margin: 0 auto;
+        padding: 0;
+
+        justify-items: center;
+        gap: 30px;
     }
 
-    .envelope,
+    /* Centre each envelope */
+
+    .envelope {
+        display: block;
+        width: 75%;
+        max-width: 280px;
+
+        margin: 0 auto;
+        padding: 0;
+
+        justify-self: center;
+    }
+
     .envelope img {
+        display: block;
         width: 100%;
         height: auto;
+        margin: 0 auto;
+        object-fit: contain;
     }
+
+    /* Hide the overlapping postmark */
+
+    .christmas-postmark {
+        display: none;
+    }
+}
 
     .calendar-footer {
     margin-top: 25px;
     font-size: 18px;
     }
-
-
-  .envelope img {
-    width: 150px;
-    height: 115px;
-  }
 
   .envelope p {
     margin-top: 8px;
