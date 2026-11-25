@@ -366,27 +366,46 @@ a {
 
   /* LETTER */
 
-  .letter-page {
-    padding: 30px 15px;
-  }
+    .letter-page {
+        width: 100%;
+        padding: 15px 0;
+    }
 
-  .letter-container {
-    width: 95vw;
+    .letter-container {
+        width: 98vw;
+        max-width: 100%;
+        margin: 0 auto;
+    }
 
-    margin-top: 20px;
-  }
+    .opening-gif {
+        width: 100%;
+        height: auto;
+    }
 
-  .letter-text {
-    width: 55%;
-  }
+    .letter-text {
+        width: 58%;
+        max-height: 65%;
+        overflow-y: auto;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 
-  /* BACK LINK */
+    .letter-text h1 {
+        font-size: clamp(18px, 5.2vw, 26px);
+        line-height: 1.2;
+        margin-bottom: 18px;
+    }
 
-  .back-link {
-    margin-top: 20px;
+    .letter-text p {
+        font-size: clamp(14px, 3.8vw, 19px);
+        line-height: 1.6;
+    }
 
-    font-size: 13px;
-  }
+    .back-link {
+        margin-top: 15px;
+        margin-bottom: 15px;
+    }
 }
 
 
