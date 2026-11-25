@@ -214,7 +214,7 @@ gif.addEventListener("load", () => {
 
 }, { once: true });
 
-gif.src = `images/envelope-opening ${gifNumber}.GIF`;
+gif.src = `images/envelope-opening ${gifNumber}.gif`;
 
 function launchBirthdayBalloons() {
 
