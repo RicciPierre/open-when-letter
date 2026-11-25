@@ -51,14 +51,33 @@ a {
 }
 
 .home h1 {
-    margin: 0 0 10px;
-    font-family: "Lora", serif;
+    display: table;
+    position: relative;
+
+    margin: 0 auto 40px;
+    padding: 20px 35px;
+
+    /* Vintage paper */
+    background: #fff8ed;
+    color: #91474e;
+
+    /* Postage stamp border */
+    border: 3px dotted #b49a87;
+    outline: 1px solid #cdb5a2;
+    outline-offset: -8px;
+
+    /* Typography */
+    font-family: "Lora", Georgia, serif;
     font-style: italic;
     font-weight: 600;
-    color: var(--cranberry-red);
+    font-size: clamp(22px, 4vw, 38px);
     letter-spacing: 0.02em;
-    margin-bottom: 0.5rem;
     text-align: center;
+
+    /* Handmade appearance */
+    transform: rotate(-2deg);
+
+    box-shadow: 0 4px 10px rgba(74, 48, 48, 0.10);
 }
 
 .home > p {
@@ -70,43 +89,48 @@ a {
 
 .envelope-grid {
     display: grid;
-
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-
-    gap: 45px 60px;
-    width: 50vw;
-    max-width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 25px 15px;
+    width: 100%;
     margin: 0 auto;
 }
 
 .envelope {
-    width: 50vw;
-    justify-self: center;
-    text-align: center;
-    text-decoration: none;
-    transition: transform 0.2s ease;
+    width: 100%;
+    min-width: 0;
+    transition: transform 0.3s ease;
+}
+
+.envelope:nth-child(4n + 1) {
+    transform: rotate(-2deg);
+}
+
+.envelope:nth-child(4n + 2) {
+    transform: rotate(1.5deg);
+}
+
+.envelope:nth-child(4n + 3) {
+    transform: rotate(-1deg);
+}
+
+.envelope:nth-child(4n + 4) {
+    transform: rotate(2deg);
+}
+
+@media (hover: hover) {
+    .envelope:hover {
+        transform: translateY(-6px)
+                   rotate(0deg)
+                   scale(1.04);
+    }
 }
 
 .envelope img {
     display: block;
-
-    width: 50vw;
-    height: 285px;
-    margin: 0 auto;
-
+    width: 100%;
+    height: auto;
     object-fit: contain;
-}
 
-/*
-.envelope p {
-    margin: 12px 0 0;
-    font-size: 17px;
-    line-height: 1.4;
-}
-*/
-
-.envelope:hover {
-    transform: translateY(-6px);
 }
 
 /* Letter Page */
@@ -121,58 +145,122 @@ a {
     display: block;
     width: 100%;
     height: auto;
+    opacity: 1;
+
+    transition: opacity 0.6s ease-in-out;
 }
 
 .letter-text {
     position: absolute;
     top: 50%;
     left: 50%;
-
     transform: translate(-50%, -50%);
 
     width: 55%;
-
     text-align: center;
+
     opacity: 1;
-    transition: opacity 1.5s ease;
+    visibility: visible;
+    z-index: 2;
+
+    max-height: 65%;
+    overflow-y: auto;
+    scrollbar-width: none;
+
+    transition: opacity 0.5s ease;
+}
+
+.letter-text::-webkit-scrollbar {
+    display: none;
 }
 
 .letter-text.hidden {
     opacity: 0;
+    visibility: hidden;
 }
 
 .letter-text h1 {
-    margin: 0 0 20px;
-    font-size: 24px;
+    margin: 0 0 0.8em;
+    font-size: clamp(14px, 3vw, 24px);
     font-weight: normal;
 }
 
 .letter-text p {
     margin: 0;
-    font-size: 16px;
+    font-size: clamp(10px, 2vw, 16px);
     line-height: 1.6;
+    overflow-wrap: break-word;
 }
 
 .back-link {
-    margin-top: 30px;
-    font-family: "Lora", serif;
-    font-style: italic;
-    font-weight: 600;
-    color: var(--cranberry-red);
-    letter-spacing: 0.02em;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    position: relative;
+    margin: 25px auto;
+    padding: 14px 26px;
+
+    background: #fff8ed;
+    color: #91474e;
+
+    border: 3px dotted #b49a87;
+    outline: 1px solid #cdb5a2;
+    outline-offset: -7px;
+
+    font-family: "Special Elite", monospace;
+    font-size: clamp(12px, 2vw, 16px);
+
     text-decoration: none;
+
+    box-shadow: 0 3px 8px rgba(74, 48, 48, 0.08);
+
+    transition:
+        transform 0.3s ease,
+        background-color 0.3s ease,
+        box-shadow 0.3s ease;
 }
 
-.button{
-    background-color: #f6f6f67a;
-    border-radius: 10px;    
-    padding: 10px 20px;
-    text-align: center;
-    display: inline-block;
-    font-size: 18px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    cursor: pointer;
+/* Arrow */
+
+.back-arrow {
+    font-size: 20px;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect */
+
+@media (hover: hover) {
+
+    .back-link:hover {
+        background-color: #f8e6e3;
+        transform: translateY(-3px) rotate(-1deg);
+        box-shadow: 0 6px 12px rgba(74, 48, 48, 0.12);
+    }
+
+    .back-link:hover .back-arrow {
+        transform: translateX(-4px);
+    }
+}
+
+/* Click effect */
+
+.back-link:active {
+    transform: scale(0.96);
+}
+
+.back-link:focus-visible {
+    outline: 2px solid #91474e;
+    outline-offset: 3px;
+}
+
+/* Centre the button below the letter */
+
+.letter-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 /* mobile version */
@@ -181,7 +269,6 @@ a {
   body {
     padding: 20px 0;
   }
-
 
   /* HOME */
 
@@ -196,6 +283,15 @@ a {
 
     overflow-y: auto;
 
+    position: relative;
+
+    border: 1px solid rgba(180, 154, 135, 0.6);
+
+    box-shadow:
+    inset 0 0 0 7px rgba(255, 248, 237, 0.3),
+    inset 0 0 0 8px rgba(180, 154, 135, 0.4),
+    0 8px 30px rgba(74, 48, 48, 0.12);
+
     /* Hide scrollbar */
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -206,31 +302,55 @@ a {
   }
 
   .home h1 {
-    font-size: 42px;
+    font-size: clamp(18px, 6vw, 26px);
+    padding: 16px 20px;
+    margin-bottom: 30px;
+    max-width: 95%;
   }
 
   .home > p {
     margin-bottom: 30px;
   }
 
-
   /* ENVELOPES */
 
-  .envelope-grid {
-    width: 100%;
+  .calendar-header {
+    margin-bottom: 25px;
+  }
 
-    grid-template-columns: 1fr 1fr;
+    .christmas-postmark {
+    display: none;
+    }
 
-    gap: 30px 0;
+    .christmas-ornament {
+    font-size: 16px;
+    letter-spacing: 2px;
+    }
 
+    .christmas-divider {
+    width: 90%;
+    margin: 15px auto 25px;
+    }
+
+    .envelope-grid {
+    grid-template-columns: 1fr;
+    width: 85%;
+    max-width: 350px;
+    gap: 25px;
     justify-items: center;
-  }
+    }
 
-  .envelope {
-    width: 150px;
+    .envelope,
+    .envelope img {
+        width: 100%;
+        height: auto;
+    }
 
-    justify-self: center;
-  }
+    .calendar-footer {
+    margin-top: 25px;
+    font-size: 18px;
+    }
+
 
   .envelope img {
     width: 150px;
@@ -260,18 +380,6 @@ a {
     width: 55%;
   }
 
-  .letter-text h1 {
-    margin-bottom: 12px;
-
-    font-size: 18px;
-  }
-
-  .letter-text p {
-    font-size: 12px;
-    line-height: 1.5;
-  }
-
-
   /* BACK LINK */
 
   .back-link {
@@ -279,4 +387,276 @@ a {
 
     font-size: 13px;
   }
+}
+
+
+/* BIRTHDAY BALLOONS */
+
+.birthday-balloon {
+    position: fixed;
+    bottom: -120px;
+    width: 40px;
+    height: 50px;
+    border-radius: 50% 50% 45% 45%;
+    pointer-events: none;
+    z-index: 9999;
+
+    box-shadow:
+        inset -5px -5px 10px rgba(0, 0, 0, 0.08),
+        inset 5px 5px 10px rgba(255, 255, 255, 0.3);
+
+    animation: balloonFloat linear forwards;
+}
+
+/* Balloon string */
+
+.birthday-balloon::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: 1px;
+    height: 35px;
+    background: rgba(100, 100, 100, 0.5);
+}
+
+/* Light reflection */
+
+.birthday-balloon::before {
+    content: "";
+    position: absolute;
+    top: 15%;
+    left: 20%;
+    width: 20%;
+    height: 25%;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    transform: rotate(25deg);
+}
+
+/* Floating animation */
+
+@keyframes balloonFloat {
+    0% {
+        transform: translateY(0) rotate(-10deg);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(25px, -60vh) rotate(10deg);
+    }
+
+    85% {
+        opacity: 1;
+    }
+
+    100% {
+        transform: translate(-20px, -130vh) rotate(-10deg);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .birthday-balloon {
+        display: none;
+    }
+}
+
+
+/* CHRISTMAS SNOWFALL */
+
+.christmas-snow {
+    position: fixed;
+    top: -30px;
+    color: white;
+    pointer-events: none;
+    user-select: none;
+    z-index: 9999;
+
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+
+    animation: snowfall linear infinite;
+}
+
+@keyframes snowfall {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
+
+    25% {
+        transform: translate(15px, 25vh) rotate(90deg);
+    }
+
+    50% {
+        transform: translate(-15px, 50vh) rotate(180deg);
+    }
+
+    75% {
+        transform: translate(20px, 75vh) rotate(270deg);
+    }
+
+    100% {
+        transform: translate(0, 110vh) rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .christmas-snow {
+        display: none;
+    }
+}
+
+/* SAINT NICOLAS */
+
+.saint-nicolas {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 300px;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.saint-nicolas.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* FLOATING HEARTS - DECEMBER 12 */
+
+.love-heart {
+    position: fixed;
+    bottom: -60px;
+    pointer-events: none;
+    user-select: none;
+    z-index: 9999;
+    line-height: 1;
+
+    animation: heartFloat linear forwards;
+}
+
+@keyframes heartFloat {
+
+    0% {
+        transform: translateY(0) rotate(-15deg) scale(0.5);
+        opacity: 0;
+    }
+
+    15% {
+        opacity: 1;
+    }
+
+    50% {
+        transform: translate(25px, -60vh) rotate(15deg) scale(1);
+    }
+
+    80% {
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-20px, -120vh) rotate(-10deg) scale(0.8);
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .love-heart {
+        display: none;
+    }
+}
+
+/* CHRISTMAS STATIONERY DECORATIONS */
+
+.calendar-header {
+    position: relative;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.christmas-ornament {
+    color: #64795c;
+    font-size: 20px;
+    letter-spacing: 4px;
+    margin-bottom: 25px;
+}
+
+.calendar-header h1 {
+    margin-bottom: 25px;
+}
+
+/* Decorative divider */
+
+.christmas-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+
+    width: 80%;
+    margin: 20px auto 30px;
+
+    color: #b49a87;
+}
+
+.christmas-divider::before,
+.christmas-divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #b49a87;
+}
+
+/* Decorative footer */
+
+.calendar-footer {
+    text-align: center;
+    color: #64795c;
+    font-size: 22px;
+    letter-spacing: 5px;
+    margin-top: 40px;
+    padding-bottom: 15px;
+}
+
+.christmas-postmark {
+    position: absolute;
+    top: -15px;
+    right: -30px;
+
+    width: 95px;
+    height: 95px;
+
+    border: 4px double #91474e;
+    border-radius: 50%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
+    font-family: "Special Elite", monospace;
+    text-transform: uppercase;
+    color: #91474e;
+
+    opacity: 0.55;
+    transform: rotate(15deg);
+
+    pointer-events: none;
+}
+
+.christmas-postmark span {
+    font-size: 9px;
+}
+
+.christmas-postmark strong {
+    font-size: 15px;
 }
