@@ -151,7 +151,8 @@ const letters = {
     "24": {
     title: "The twenty-fourth",
     message:
-    "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+    "Merry Kristler !",
+    music : "audio/24.mp3"
     },
 };
 
