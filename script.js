@@ -151,7 +151,7 @@ const letters = {
     "24": {
     title: "The twenty-fourth",
     message:
-    "Merry Kristler !",
+    "Merry Kristler ! ",
     music : "audio/24.mp3"
     },
 };
@@ -209,8 +209,8 @@ function playMedia(media) {
     return media.play().then(() => true).catch(() => false);
 }
 
-// Start playback within the actual envelope click. Keep it paused and
-// rewind until the intended reveal time; browser policies can still block a restart.
+// Start audible music directly in the envelope click. Only videos are
+// primed silently for their later reveal; browser policies may still block playback.
 function prepareMedia(session) {
     const item = session.letter;
     if (!item.music && !item.video) return;
@@ -222,10 +222,21 @@ function prepareMedia(session) {
     media.setAttribute('playsinline', '');
     media.src = item.music || item.video;
     media.className = item.music ? 'letter-audio' : 'letter-video' + (item.portrait ? ' portrait' : '');
-    // Muted priming avoids leaking the surprise before the paper opens.
-    media.muted = true;
     media.classList.add('media-preparing');
     page.append(media);
+
+    // Music starts audibly during the actual envelope click.
+    if (item.music) {
+        media.muted = false;
+        session.priming = playMedia(media);
+        return;
+    }
+
+    // Day 3 must wait for the recipient to choose Non.
+    if (item.question) return;
+
+    // Other videos retain their existing delayed reveal.
+    media.muted = true;
     session.priming = playMedia(media).then(ok => {
         if (active !== session || session.revealed) return ok;
         media.pause();
@@ -240,8 +251,12 @@ function revealMedia(session, destination) {
     session.revealed = true;
     media.classList.remove('media-preparing');
     destination.append(media);
-    try { media.currentTime = 0; } catch (_) {}
+    if (!session.letter.music) {
+        try { media.currentTime = 0; } catch (_) {}
+    }
     media.muted = false;
+    // Music already started by the click must not be restarted.
+    if (session.letter.music && !media.paused) return;
     // Native controls provide a fallback if audible autoplay is denied.
     playMedia(media).then(ok => {
         if (active !== session || ok || !media.paused || !media.isConnected) return;
