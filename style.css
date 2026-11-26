@@ -727,3 +727,9 @@ a {
 video.letter-video { height: auto; aspect-ratio: auto; max-height: 60dvh; object-fit: contain; background: #241c1c; }
 video.letter-video.portrait { max-width: 160px; }
 .letter-surprise video.letter-video { max-height: 65dvh; }
+
+/* Single-page views and media */
+.home[hidden], .letter-page[hidden] { display: none !important; }
+.media-preparing { position: absolute; width: 1px !important; height: 1px !important; opacity: 0; pointer-events: none; }
+.letter-audio { display: block; width: 100%; max-width: 300px; margin: 0 auto; }
+@media (max-width: 600px) { .christmas-postmark { display: none; } }

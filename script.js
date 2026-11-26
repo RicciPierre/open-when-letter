@@ -155,78 +155,199 @@ const letters = {
     },
 };
 
-// fetching the letter name
-const params = new URLSearchParams(window.location.search);
-const letterId = params.get("letter");
 
-const letter = letters[letterId];
+// Single-page navigation and media lifecycle.
+const home = document.querySelector('.home');
+const page = document.querySelector('.letter-page');
+const text = document.querySelector('.letter-text');
+const extras = document.getElementById('letter-extras');
+const gif = document.querySelector('.opening-gif');
+const saint = document.querySelector('.saint-nicolas');
+const finalLetter = new Image();
+finalLetter.src = 'images/letter-final.png';
+let active = null;
+let homeScroll = 0;
 
-if (letter) {
-    document.getElementById("letter-title").innerHTML = letter.title;
-    document.getElementById("letter-message").textContent = letter.message.replace(/<br\s*\/?>/gi, "\n");
-} else {
-     document.getElementById("letter-title").textContent = "Letter not found.";
-    document.getElementById("letter-message").textContent = "Hmm this letter doesn't seem to exist.";
+function later(session, callback, delay) {
+    const id = setTimeout(() => {
+        session.timers.delete(id);
+        if (active === session) callback();
+    }, delay);
+    session.timers.add(id);
 }
 
-
-
-
-const letterText = document.querySelector(".letter-text");
-const gif = document.querySelector(".opening-gif");
-
-// Select the correct envelope colour
-const gifNumber = ((Number(letterId) - 1) % 6) + 1;
-
-// Preload the final letter image
-const finalLetter = new Image();
-finalLetter.src = "images/letter-final.png";
-
-// Opening animation
-gif.addEventListener("load", () => {
-
-    setTimeout(async () => {
-
-        // Make sure the final image is ready
-        try {
-            await finalLetter.decode();
-        } catch (error) {
-            console.error("Final image failed to load", error);
-            return;
+function stopLetter() {
+    const previous = active;
+    active = null;
+    if (previous) {
+        previous.timers.forEach(clearTimeout);
+        if (previous.media) {
+            previous.media.pause();
+            previous.media.removeAttribute('src');
+            previous.media.load();
+            previous.media.remove();
         }
+    }
+    gif.onload = gif.onerror = null;
+    document.querySelectorAll('.letter-surprise').forEach(dialog => dialog.remove());
+    document.querySelectorAll('.birthday-balloon, .love-heart, .christmas-snow').forEach(el => el.remove());
+    saint.classList.remove('show');
+    extras.replaceChildren();
+    text.classList.add('hidden');
+    text.scrollTop = 0;
+}
 
-        // Replace the GIF without fading
-        gif.src = finalLetter.src;
+function showHome() {
+    stopLetter();
+    page.hidden = true;
+    home.hidden = false;
+    home.scrollTop = homeScroll;
+}
 
-        // Reveal the letter text
-        letterText.classList.remove("hidden");
-        renderLetterExtras(letter);
+function playMedia(media) {
+    return media.play().then(() => true).catch(() => false);
+}
 
-        // December 6 - Saint Nicolas
-        if (Number(letterId) === 6) {
-            showSaintNicolas();
-        }
+// Start playback within the actual envelope click. Keep it paused and
+// rewind until the intended reveal time; browser policies can still block a restart.
+function prepareMedia(session) {
+    const item = session.letter;
+    if (!item.music && !item.video) return;
+    const media = document.createElement(item.music ? 'audio' : 'video');
+    session.media = media;
+    media.preload = 'auto';
+    media.controls = true;
+    media.playsInline = true;
+    media.setAttribute('playsinline', '');
+    media.src = item.music || item.video;
+    media.className = item.music ? 'letter-audio' : 'letter-video' + (item.portrait ? ' portrait' : '');
+    // Muted priming avoids leaking the surprise before the paper opens.
+    media.muted = true;
+    media.classList.add('media-preparing');
+    page.append(media);
+    session.priming = playMedia(media).then(ok => {
+        if (active !== session || session.revealed) return ok;
+        media.pause();
+        try { media.currentTime = 0; } catch (_) {}
+        return ok;
+    });
+}
 
-        // December 9 - Birthday
-        if (Number(letterId) === 9) {
-            launchBirthdayBalloons();
-        }
+function revealMedia(session, destination) {
+    if (active !== session || !session.media) return;
+    const media = session.media;
+    session.revealed = true;
+    media.classList.remove('media-preparing');
+    destination.append(media);
+    try { media.currentTime = 0; } catch (_) {}
+    media.muted = false;
+    // Native controls provide a fallback if audible autoplay is denied.
+    playMedia(media).then(ok => {
+        if (active !== session || ok || !media.paused || !media.isConnected) return;
+        const button = document.createElement('button');
+        button.className = 'surprise-button';
+        button.textContent = session.letter.music ? '♫ Écouter' : '▶ Regarder';
+        button.onclick = () => {
+            media.muted = false;
+            playMedia(media).then(success => { if (success) button.remove(); });
+        };
+        media.addEventListener('playing', () => button.remove(), { once: true });
+        destination.append(button);
+    });
+}
 
-        // December 12 - Hearts
-        if (Number(letterId) === 12) {
-            launchLoveHearts();
-        }
+function showSurprise(session, content) {
+    if (active !== session) return;
+    const dialog = document.createElement('dialog');
+    dialog.className = 'letter-surprise';
+    dialog.setAttribute('aria-label', 'Surprise');
+    const holder = document.createElement('div');
+    const close = document.createElement('button');
+    close.className = 'surprise-button';
+    close.textContent = 'Fermer ×';
+    close.onclick = () => dialog.close();
+    dialog.append(holder, close);
+    dialog.addEventListener('close', () => {
+        if (content instanceof HTMLMediaElement) content.pause();
+        dialog.remove();
+    }, { once: true });
+    dialog.addEventListener('click', e => { if (e.target === dialog) dialog.close(); });
+    document.body.append(dialog);
+    dialog.showModal();
+    if (content instanceof HTMLMediaElement) revealMedia(session, holder);
+    else holder.append(content);
+}
 
-        // December 24 - Snow
-        if (Number(letterId) === 24) {
-            launchChristmasSnow();
-        }
+function finishOpening(session) {
+    if (active !== session || session.finished) return;
+    session.finished = true;
+    gif.src = finalLetter.src;
+    text.classList.remove('hidden');
+    const item = session.letter;
+    if (item.music || (item.video && item.videoDelay === 0)) revealMedia(session, extras);
+    else if (item.video) later(session, () => showSurprise(session, session.media), item.videoDelay ?? 5000);
+    if (item.popup) {
+        const image = new Image();
+        image.src = item.popup.image;
+        image.alt = 'Surprise du jour';
+        image.className = 'surprise-image';
+        later(session, () => showSurprise(session, image), item.popup.delay);
+    }
+    if (session.day === 6) showSaintNicolas();
+    if (session.day === 9) launchBirthdayBalloons();
+    if (session.day === 12) launchLoveHearts();
+    if (session.day === 24) launchChristmasSnow();
+}
 
-    }, 1200);
+function openLetter(day) {
+    if (!Object.hasOwn(letters, day)) return showHome();
+    if (!home.hidden) homeScroll = home.scrollTop;
+    stopLetter();
+    const session = {day: Number(day), letter: letters[day], timers: new Set(), media: null};
+    active = session;
+    home.hidden = true;
+    page.hidden = false;
+    document.getElementById('letter-title').innerHTML = session.letter.title;
+    document.getElementById('letter-message').textContent = session.letter.message.replace(/<br\s*\/?>/gi, '\n');
+    prepareMedia(session); // Must run synchronously inside the click handler.
+    const gifNumber = ((session.day - 1) % 6) + 1;
+    gif.onload = () => {
+        gif.onload = null;
+        later(session, async () => {
+            try { await finalLetter.decode(); } catch (error) { console.error(error); }
+            finishOpening(session);
+        }, 1200);
+    };
+    gif.onerror = () => { gif.onerror = null; gif.onload = null; finishOpening(session); };
+    // A fresh URL per opening restarts the GIF even when revisiting a colour.
+    gif.src = `images/envelope-opening ${gifNumber}.gif?open=${Date.now()}`;
+}
 
-}, { once: true });
+function route() {
+    const day = new URLSearchParams(location.search).get('letter');
+    if (day && Object.hasOwn(letters, day)) openLetter(day);
+    else showHome();
+}
 
-gif.src = `images/envelope-opening ${gifNumber}.gif`;
+home.querySelectorAll('.envelope').forEach(link => {
+    const day = new URL(link.href).searchParams.get('letter');
+    link.href = `index.html?letter=${day}`;
+    link.addEventListener('click', event => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+        event.preventDefault();
+        history.pushState({}, '', `?letter=${day}`);
+        openLetter(day);
+    });
+});
+page.querySelector('.back-link').addEventListener('click', event => {
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+    event.preventDefault();
+    history.pushState({}, '', location.pathname);
+    showHome();
+});
+window.addEventListener('popstate', route);
+window.addEventListener('pagehide', () => { if (active?.media) active.media.pause(); });
+route();
 
 function launchBirthdayBalloons() {
 
@@ -368,86 +489,5 @@ function launchLoveHearts() {
         heart.addEventListener("animationend", () => {
             heart.remove();
         });
-    }
-}
-
-
-// Extra content configured in const letters.
-// Autoplay with sound is subject to the browser's permissions.
-function createVideo(path, portrait = false) {
-    const video = document.createElement("video");
-    video.className = "letter-video" + (portrait ? " portrait" : "");
-    video.controls = true;
-    video.playsInline = true;
-    video.preload = "auto";
-    video.src = path;
-    video.setAttribute("aria-label", "Video surprise");
-    return video;
-}
-
-function tryAutoplay(media) {
-    media.play().catch(() => {
-        // Native controls remain available if autoplay is blocked.
-    });
-}
-
-function showSurprise(content) {
-    const dialog = document.createElement("dialog");
-    dialog.className = "letter-surprise";
-    dialog.setAttribute("aria-label", "Surprise");
-    const close = document.createElement("button");
-    close.className = "surprise-button";
-    close.textContent = "Fermer ×";
-    close.onclick = () => dialog.close();
-    dialog.append(content, close);
-    dialog.addEventListener("close", () => {
-        if (content instanceof HTMLMediaElement) content.pause();
-        dialog.remove();
-    }, { once: true });
-    dialog.addEventListener("click", e => {
-        if (e.target === dialog) dialog.close();
-    });
-    document.body.append(dialog);
-    dialog.showModal();
-    if (content instanceof HTMLMediaElement) tryAutoplay(content);
-}
-
-function renderLetterExtras(letter) {
-    if (!letter) return;
-    const extras = document.getElementById("letter-extras");
-    if (letter.video) {
-        const video = createVideo(letter.video, letter.portrait);
-        if (letter.videoDelay === 0) {
-            extras.append(video);
-            tryAutoplay(video);
-        } else {
-            setTimeout(() => showSurprise(video), letter.videoDelay ?? 5000);
-        }
-    }
-    if (letter.popup) {
-        const image = new Image();
-        image.src = letter.popup.image;
-        image.alt = "Surprise du jour";
-        image.className = "surprise-image";
-        setTimeout(() => showSurprise(image), letter.popup.delay);
-    }
-    if (letter.music) {
-        const audio = new Audio(letter.music);
-        audio.preload = "auto";
-        const button = document.createElement("button");
-        button.className = "surprise-button";
-        button.textContent = "♫ Écouter";
-        button.onclick = () => audio.paused ? tryAutoplay(audio) : audio.pause();
-        audio.addEventListener("play", () => button.textContent = "Ⅱ Pause");
-        audio.addEventListener("pause", () => button.textContent = "♫ Écouter");
-        audio.addEventListener("ended", () => button.textContent = "♫ Réécouter");
-        audio.addEventListener("error", () => {
-            button.textContent = "Audio indisponible";
-            button.disabled = true;
-            console.error("Cannot load audio:", letter.music);
-        });
-        extras.append(button);
-        tryAutoplay(audio);
-        window.addEventListener("pagehide", () => audio.pause(), { once: true });
     }
 }
