@@ -10,28 +10,28 @@ const letters = {
         title: "The second",
         message:
             "J'aime très beaucoup mon bebou mais ....",
-        video: "video/2.mp4", videoDelay: 5000
+        video: "video/2.mp4", videoDelay: 3000
     },
 
     "3": {
         title: "The third",
         message:
             "Est-ce que Saint-Nicolas est passé dans tes pantoufles ?",
-        video: "video/3.mp4", videoDelay: 5000
+        video: "video/3.mp4", question: true, questionDelay: 3000
     },
 
     "4": {
         title: "The fourth",
         message:
             "Boomeeeeeeer alert !",
-        popup: { image: "images/Smile-Friday.jpg", delay: 5000 }
+        popup: { image: "images/Smile-Friday.jpg", delay: 3000 }
     },
 
     "5": {
         title: "The fifth",
         message:
             "How you should feel waking up pwincess",
-        video: "video/5.mp4", videoDelay: 5000
+        video: "video/5.mp4", videoDelay: 3000
     },
 
     "6": {
@@ -44,7 +44,7 @@ const letters = {
     title: "The seventh",
     message:
         "Toujours pas fatigué d'être that hot ?",
-        popup: { image: "images/dog.jpeg", delay: 5000 }
+        popup: { image: "images/dog.jpeg", delay: 3000 }
     },
 
     "8": {
@@ -84,7 +84,7 @@ const letters = {
     title: "The thirteenth",
     message:
     "Plus que 11 jours avant Noël !",
-        popup: { image: "images/rpdr.gif.webp", delay: 10000 }
+        popup: { image: "images/rpdr.gif.webp", delay: 3000 }
     },
 
     "14": {
@@ -278,13 +278,51 @@ function showSurprise(session, content) {
     else holder.append(content);
 }
 
+// December 3: ask the question before revealing the video.
+function showSaintNicolasQuestion(session) {
+    if (active !== session) return;
+
+    const dialog = document.createElement('dialog');
+    dialog.className = 'letter-surprise';
+    dialog.setAttribute('aria-label', 'Question de Saint-Nicolas');
+
+    const question = document.createElement('p');
+    question.textContent = session.letter.message;
+
+    const choices = document.createElement('div');
+    choices.className = 'surprise-choices';
+
+    const yes = document.createElement('button');
+    yes.className = 'surprise-button';
+    yes.textContent = 'Oui';
+
+    const no = document.createElement('button');
+    no.className = 'surprise-button';
+    no.textContent = 'Non';
+
+    yes.onclick = () => dialog.close();
+    no.onclick = () => {
+        if (active !== session) return;
+        dialog.close();
+        // Play directly within the Non click for better audible autoplay.
+        showSurprise(session, session.media);
+    };
+
+    choices.append(yes, no);
+    dialog.append(question, choices);
+    dialog.addEventListener('close', () => dialog.remove(), { once: true });
+    document.body.append(dialog);
+    dialog.showModal();
+}
+
 function finishOpening(session) {
     if (active !== session || session.finished) return;
     session.finished = true;
     gif.src = finalLetter.src;
     text.classList.remove('hidden');
     const item = session.letter;
-    if (item.music || (item.video && item.videoDelay === 0)) revealMedia(session, extras);
+    if (item.question) later(session, () => showSaintNicolasQuestion(session), item.questionDelay ?? 0);
+    else if (item.music || (item.video && item.videoDelay === 0)) revealMedia(session, extras);
     else if (item.video) later(session, () => showSurprise(session, session.media), item.videoDelay ?? 5000);
     if (item.popup) {
         const image = new Image();
