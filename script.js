@@ -1,144 +1,155 @@
 const letters = {
     "1": {
-        title: "Open When <br> You Miss Me",
+        title: "The one",
         message:
-            "I wish I could be there with you right now. Until then, just remember that I'm always thinking of you. I love you."
+            "Plus que 23 jours before Christmaaaas let's get motivated !",
+        music: "audio/1.mp3"
     },
 
     "2": {
-        title: "Open When<br> You're Having A Bad Day",
+        title: "The second",
         message:
-            "It's okay to have bad days. Take a breath, take a break, and remember that tomorrow is another day. You've got this."
+            "J'aime très beaucoup mon bebou mais ....",
+        video: "video/2.mp4", videoDelay: 5000
     },
 
     "3": {
-        title: "Open When <br> You Need A Hug",
+        title: "The third",
         message:
-            "Consider this your virtual hug. Squeeze your pillow really tight and pretend it's me. I can't wait to hug you for real."
+            "Est-ce que Saint-Nicolas est passé dans tes pantoufles ?",
+        video: "video/3.mp4", videoDelay: 5000
     },
 
     "4": {
-        title: "Open When <br> You Can't Sleep",
+        title: "The fourth",
         message:
-            "Still awake? Close your eyes, get comfy, and imagine we're lying next to each other. Hopefully I'll see you in your dreams."
+            "Boomeeeeeeer alert !",
+        popup: { image: "images/Smile-Friday.jpg", delay: 5000 }
     },
 
     "5": {
-        title: "Open When <br> You Need To Know I Love You",
+        title: "The fifth",
         message:
-            "I love you more than I could ever fit into a little letter, but I hope this reminds you just how much you mean to me."
+            "How you should feel waking up pwincess",
+        video: "video/5.mp4", videoDelay: 5000
     },
 
     "6": {
-        title: "Open When <br> You're Thinking Of Me",
+        title: "The sixth",
         message:
-            "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+            "Je crois que Saint-Nicolas est vraiment passé dans tes pantoufles cette fois-ci 👀"
     },
 
     "7": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The seventh",
     message:
-        "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+        "Toujours pas fatigué d'être that hot ?",
+        popup: { image: "images/dog.jpeg", delay: 5000 }
     },
 
     "8": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The eighth",
     message:
-        "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+        "",
+        video: "video/8.mp4", portrait: true, videoDelay: 0
     },
 
     "9": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The ninth",
     message:
-        "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+        "Ouuuuuuh it's your birthdayyyyyy le bebz ! <br> So grateful d'avoir un bebzibou à l'écoute, soft as a kwoissant, si drôle, toujours la à mes côtés. <br> J'espère pouvoir encore te fêter pendant pleins d'années, tu le mérites tellement ! <br> Happy birthday ! <br> Je t'aime ❤️",
+        music: "audio/9.mp3"
     },
 
     "10": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The tenth",
     message:
         "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "11": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The eleventh",
     message:
         "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "12": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The twelfth",
     message:
-        "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+        "Happy moisiversaire hihi",
+        music: "audio/12.mp3"
     },
 
     "13": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The thirteenth",
     message:
-    "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+    "Plus que 11 jours avant Noël !",
+        popup: { image: "images/rpdr.gif.webp", delay: 10000 }
     },
 
     "14": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The fourteenth",
     message:
-    "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+    "Finir à 20h I don't even know her",
+        music: "audio/14.mp3"
     },
 
     "15": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The fifteenth",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "16": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The sixteenth",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "17": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The seventeenth",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "18": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The eighteenth",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "19": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The nineteenth",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "20": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The twentieth",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "21": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The twenty-first",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "22": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The twenty-second",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "23": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The twenty-third",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
 
     "24": {
-    title: "Open When <br> You're Thinking Of Me",
+    title: "The twenty-fourth",
     message:
     "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
     },
@@ -152,7 +163,7 @@ const letter = letters[letterId];
 
 if (letter) {
     document.getElementById("letter-title").innerHTML = letter.title;
-    document.getElementById("letter-message").textContent = letter.message;
+    document.getElementById("letter-message").textContent = letter.message.replace(/<br\s*\/?>/gi, "\n");
 } else {
      document.getElementById("letter-title").textContent = "Letter not found.";
     document.getElementById("letter-message").textContent = "Hmm this letter doesn't seem to exist.";
@@ -189,6 +200,7 @@ gif.addEventListener("load", () => {
 
         // Reveal the letter text
         letterText.classList.remove("hidden");
+        renderLetterExtras(letter);
 
         // December 6 - Saint Nicolas
         if (Number(letterId) === 6) {
@@ -356,5 +368,86 @@ function launchLoveHearts() {
         heart.addEventListener("animationend", () => {
             heart.remove();
         });
+    }
+}
+
+
+// Extra content configured in const letters.
+// Autoplay with sound is subject to the browser's permissions.
+function createVideo(path, portrait = false) {
+    const video = document.createElement("video");
+    video.className = "letter-video" + (portrait ? " portrait" : "");
+    video.controls = true;
+    video.playsInline = true;
+    video.preload = "auto";
+    video.src = path;
+    video.setAttribute("aria-label", "Video surprise");
+    return video;
+}
+
+function tryAutoplay(media) {
+    media.play().catch(() => {
+        // Native controls remain available if autoplay is blocked.
+    });
+}
+
+function showSurprise(content) {
+    const dialog = document.createElement("dialog");
+    dialog.className = "letter-surprise";
+    dialog.setAttribute("aria-label", "Surprise");
+    const close = document.createElement("button");
+    close.className = "surprise-button";
+    close.textContent = "Fermer ×";
+    close.onclick = () => dialog.close();
+    dialog.append(content, close);
+    dialog.addEventListener("close", () => {
+        if (content instanceof HTMLMediaElement) content.pause();
+        dialog.remove();
+    }, { once: true });
+    dialog.addEventListener("click", e => {
+        if (e.target === dialog) dialog.close();
+    });
+    document.body.append(dialog);
+    dialog.showModal();
+    if (content instanceof HTMLMediaElement) tryAutoplay(content);
+}
+
+function renderLetterExtras(letter) {
+    if (!letter) return;
+    const extras = document.getElementById("letter-extras");
+    if (letter.video) {
+        const video = createVideo(letter.video, letter.portrait);
+        if (letter.videoDelay === 0) {
+            extras.append(video);
+            tryAutoplay(video);
+        } else {
+            setTimeout(() => showSurprise(video), letter.videoDelay ?? 5000);
+        }
+    }
+    if (letter.popup) {
+        const image = new Image();
+        image.src = letter.popup.image;
+        image.alt = "Surprise du jour";
+        image.className = "surprise-image";
+        setTimeout(() => showSurprise(image), letter.popup.delay);
+    }
+    if (letter.music) {
+        const audio = new Audio(letter.music);
+        audio.preload = "auto";
+        const button = document.createElement("button");
+        button.className = "surprise-button";
+        button.textContent = "♫ Écouter";
+        button.onclick = () => audio.paused ? tryAutoplay(audio) : audio.pause();
+        audio.addEventListener("play", () => button.textContent = "Ⅱ Pause");
+        audio.addEventListener("pause", () => button.textContent = "♫ Écouter");
+        audio.addEventListener("ended", () => button.textContent = "♫ Réécouter");
+        audio.addEventListener("error", () => {
+            button.textContent = "Audio indisponible";
+            button.disabled = true;
+            console.error("Cannot load audio:", letter.music);
+        });
+        extras.append(button);
+        tryAutoplay(audio);
+        window.addEventListener("pagehide", () => audio.pause(), { once: true });
     }
 }

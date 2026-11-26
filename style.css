@@ -697,3 +697,33 @@ a {
 .christmas-postmark strong {
     font-size: 15px;
 }
+
+/* Interactive letter surprises */
+#letter-message { white-space: pre-line; }
+#letter-message:empty, #letter-extras:empty { display: none; }
+#letter-extras { margin-top: 12px; }
+.letter-video { display: block; width: 100%; aspect-ratio: 16 / 9; border: 0; border-radius: 5px; }
+.letter-video.portrait { aspect-ratio: 9 / 16; max-width: 160px; margin-inline: auto; }
+.surprise-choices { display: flex; justify-content: center; gap: 12px; }
+.surprise-choices[hidden] { display: none; }
+.surprise-button, .music-fallback {
+    display: inline-block; padding: 10px 14px; background: #fff8ed;
+    color: #91474e; border: 2px dotted #b49a87;
+    font: inherit; cursor: pointer; text-align: center;
+}
+.surprise-button[hidden], .music-fallback[hidden] { display: none; }
+.letter-surprise {
+    width: min(90vw, 520px); max-height: 90dvh; overflow: auto;
+    padding: 20px; border: 3px dotted #b49a87;
+    background: #fff8ed; color: #91474e; text-align: center;
+    box-shadow: 0 8px 30px #0003;
+}
+.letter-surprise::backdrop { background: rgba(30, 20, 20, .65); }
+.letter-surprise .surprise-button { margin-top: 16px; }
+.letter-surprise .letter-video.portrait { max-width: min(100%, 30dvh); }
+.surprise-image { display: block; max-width: 100%; max-height: 65dvh; height: auto; margin: auto; object-fit: contain; }
+
+/* Local video files: keep natural proportions on every screen. */
+video.letter-video { height: auto; aspect-ratio: auto; max-height: 60dvh; object-fit: contain; background: #241c1c; }
+video.letter-video.portrait { max-width: 160px; }
+.letter-surprise video.letter-video { max-height: 65dvh; }
