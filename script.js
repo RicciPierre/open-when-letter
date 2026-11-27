@@ -83,7 +83,7 @@ const letters = {
         title: "The fourteenth",
         message:
         "Finir à 20h I don't even know her",
-        music: "audio/14.mp3", delay : 4000
+        music: "audio/14.mp3", musicDelay : 7000
     },
 
     "15": {
@@ -227,8 +227,11 @@ function prepareMedia(session) {
     page.append(media);
 
     // Music starts audibly during the actual envelope click.
-    if (item.music) {
+if (item.music) {
         media.muted = false;
+
+        if (item.musicDelay > 0) return;
+
         session.priming = playMedia(media);
         return;
     }
@@ -344,7 +347,16 @@ function finishOpening(session) {
     if (item.countdown) startHolidayCountdown(session);
     if (item.game) showCalendarGame(session);
     if (item.question) later(session, () => showSaintNicolasQuestion(session), item.questionDelay ?? 0);
-    else if (item.music || (item.video && item.videoDelay === 0)) revealMedia(session, extras);
+    else if (item.music) {
+    if (item.musicDelay > 0) {
+        later(session, () => revealMedia(session, extras), item.musicDelay);
+    } else {
+        revealMedia(session, extras);
+    }
+    }
+    else if (item.video && item.videoDelay === 0) {
+        revealMedia(session, extras);
+    }
     else if (item.video) later(session, () => showSurprise(session, session.media), item.videoDelay ?? 5000);
     if (item.popup?.video) {
         later(session, () => showSurprise(session, session.media), item.popup.videoDelay ?? item.popup.delay ?? 0);
