@@ -39,7 +39,7 @@ const letters = {
         title: "The seventh",
         message:
         "Qu'est-ce qui est magnifique mais me réveille de façon sporadique ?",
-        popup : { image : "image/17.jpeg", delay : 1000 }
+        popup : { image : "images/7.jpeg", delay : 1000 }
     },
 
     "8": {
@@ -83,7 +83,7 @@ const letters = {
         title: "The fourteenth",
         message:
         "Finir à 20h I don't even know her",
-        music: "audio/14.mp3", delay : 1000
+        music: "audio/14.mp3", delay : 1500
     },
 
     "15": {
@@ -97,7 +97,7 @@ const letters = {
         title: "The sixteenth",
         message:
         "La semaine est bientôt fi...",
-        popup : { image : "image/16.gif", delay : 1000 }
+        popup : { image : "images/16.gif", delay : 1000 }
     },
 
     "17": { title: "The seventeenth", message: "", game: "cemantix" },
@@ -109,10 +109,10 @@ const letters = {
         video: "video/18.mp4", portrait: true, videoDelay: 0
     },
 
-    "19": {
+   "19": {
         title: "The nineteenth",
-        message:
-        "",
+        message: "",
+        countdownStart: "2026-12-19T00:00:00+01:00",
         countdown: "2026-12-24T00:00:00+01:00"
     },
 
@@ -189,7 +189,7 @@ function stopLetter() {
     }
     gif.onload = gif.onerror = null;
     document.querySelectorAll('.letter-surprise').forEach(dialog => dialog.remove());
-    document.querySelectorAll('.birthday-balloon, .love-heart, .christmas-snow').forEach(el => el.remove());
+    document.querySelectorAll('.birthday-balloon, .love-heart, .christmas-snow, .gift-rain').forEach(el => el.remove());
     saint.classList.remove('show');
     extras.replaceChildren();
     page.classList.remove('murdoku-open');
@@ -353,34 +353,118 @@ function finishOpening(session) {
     if (session.day === 6) showSaintNicolas();
     if (session.day === 9) launchBirthdayBalloons();
     if (session.day === 12) launchLoveHearts();
+    if (session.day === 23) launchGiftRain(session);
     if (session.day === 24) launchChristmasSnow();
 }
 
 
-// December 19: live countdown to midnight in Belgium, December 24, 2026.
+
+// December 19: countdown from December 19 to December 24, 2026.
 function startHolidayCountdown(session) {
     const message = document.getElementById('letter-message');
+
+    const start = Date.parse(session.letter.countdownStart);
     const target = Date.parse(session.letter.countdown);
+
     function tick() {
         if (active !== session) return;
-        let seconds = Math.max(0, Math.ceil((target - Date.now()) / 1000));
+
+        const now = Math.max(Date.now(), start);
+
+        let seconds = Math.max(0, Math.ceil((target - now) / 1000));
+
         if (!seconds) {
             message.textContent = 'Ça y est, les vacances !!! 🎄';
             return;
         }
-        const days = Math.floor(seconds / 86400); seconds %= 86400;
-        const hours = Math.floor(seconds / 3600); seconds %= 3600;
-        const minutes = Math.floor(seconds / 60); seconds %= 60;
+
+        const days = Math.floor(seconds / 86400);
+        seconds %= 86400;
+
+        const hours = Math.floor(seconds / 3600);
+        seconds %= 3600;
+
+        const minutes = Math.floor(seconds / 60);
+        seconds %= 60;
+
         const pad = n => String(n).padStart(2, '0');
+
         message.replaceChildren(document.createTextNode('Plus que '));
+
         const clock = document.createElement('span');
         clock.className = 'holiday-countdown';
+
         clock.textContent = `${days} j ${pad(hours)} h ${pad(minutes)} min ${pad(seconds)} s`;
+
         message.append(clock, document.createTextNode(' avant les vacances !!!'));
+
         later(session, tick, 1000 - (Date.now() % 1000));
     }
+
     tick();
 }
+
+
+// December 23: a shower of Christmas presents fills the page.
+function launchGiftRain(session) {
+    if (active !== session) return;
+
+    document.querySelector('.gift-rain')?.remove();
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const rain = document.createElement('div');
+    rain.className = 'gift-rain';
+    document.body.append(rain);
+
+    const colors = [
+        ['#91474e', '#e4bf72'],
+        ['#64795c', '#fff1d9'],
+        ['#d6a0a8', '#91474e'],
+        ['#bb955d', '#f8e9ca'],
+        ['#8098b9', '#e4c681'],
+        ['#79404d', '#dfb66c']
+    ];
+
+    const total = window.innerWidth < 700 ? 70 : 110;
+
+    for (let i = 0; i < total; i++) {
+        const gift = document.createElement('div');
+        gift.className = 'christmas-gift';
+
+        const [box, ribbon] = colors[Math.floor(Math.random() * colors.length)];
+        const size = 26 + Math.random() * 32;
+
+        gift.style.setProperty('--size', `${size}px`);
+        gift.style.setProperty('--left', `${Math.random() * 96}%`);
+        gift.style.setProperty('--duration', `${1.9 + Math.random() * 3.2}s`);
+        gift.style.setProperty('--delay', `${Math.random() * 4.5}s`);
+        gift.style.setProperty('--rotation', `${Math.random() * 90 - 45}deg`);
+        gift.style.setProperty('--pile', `${Math.random() * 120}px`);
+
+        gift.innerHTML = `
+            <svg viewBox="0 0 60 60" aria-hidden="true" focusable="false">
+                <rect x="7" y="23" width="46" height="34" rx="2" fill="${box}" stroke="#584638"/>
+                <rect x="4" y="18" width="52" height="10" rx="2" fill="${box}" stroke="#584638"/>
+                <path d="M25 18V57H35V18Z" fill="${ribbon}"/>
+                <path d="M30 18 C0 17 9 -5 30 18 C51 -5 60 17 30 18" fill="none" stroke="${ribbon}" stroke-width="5"/>
+            </svg>
+        `;
+
+        rain.append(gift);
+    }
+
+    function monitor() {
+        if (active !== session) {
+            rain.remove();
+            return;
+        }
+        requestAnimationFrame(monitor);
+    }
+
+    requestAnimationFrame(monitor);
+}
+
 
 // December 20: original 6 x 6 Murdoku-style puzzle.
 function showMurdoku(session) {
@@ -806,7 +890,7 @@ function showCalendarGame(session) {
         const who=selectField('Qui a pris la perruque ?',['Jinkx Monsoon','Bianca Del Rio','Trixie Mattel','Bob the Drag Queen']);
         const where=selectField('Dans quelle pièce l’a-t-elle emportée ?',['Werk Room','Loge','Runway','Main Stage']);
         const why=selectField('Pour quelle raison ?',['Pour saboter le défilé','Pour répéter son numéro de comédie','Pour se venger de Trixie','Pour l’offrir à RuPaul']);
-        const s=status(), fields=[who,where,why]; const submit=button('Révéler la vérité',()=>{if(fields.some(f=>!f.value)){s.textContent='Complète les trois réponses.';return;}if(who.value==='Jinkx Monsoon'&&where.value==='Werk Room'&&why.value==='Pour répéter son numéro de comédie')win(s,'Shantay, you stay! 👑 Condragulations, my bebou ♡');else s.textContent='Something’s not right, queen! Réexamine les preuves.';});
+        const s=status(), fields=[who,where,why]; const submit=button('Révéler la vérité',()=>{if(fields.some(f=>!f.value)){s.textContent='Complète les trois réponses.';return;}if(who.value==='Jinkx Monsoon'&&where.value==='Werk Room'&&why.value==='Pour répéter son numéro de comédie')win(s,'Shantay, you stay! 👑 Condragulations, diva slay the house down boots ♡');else s.textContent='Something’s not right, queen! Réexamine les preuves.';});
         const update=()=>{progress.textContent=`${examined.size}/6 examinées`;submit.disabled=examined.size!==6;};update();
         fields.forEach(f=>f.onchange=()=>{s.textContent='';s.classList.remove('solved');});
         button('Recommencer l’enquête',()=>{cards.forEach(([d,summary],i)=>{d.open=false;summary.textContent=evidence[i][0];});examined.clear();update();fields.forEach(f=>f.value='');s.textContent='';s.classList.remove('solved');}); return;
