@@ -219,6 +219,7 @@ function prepareMedia(session) {
     media.preload = 'auto';
     media.controls = true;
     media.playsInline = true;
+    media.loop = session.day === 25 && Boolean(item.music);
     media.setAttribute('playsinline', '');
     media.src = item.music || item.video || item.popup.video;
     media.className = item.music ? 'letter-audio' : 'letter-video' + (item.portrait ? ' portrait' : '');
