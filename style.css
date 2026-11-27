@@ -1101,3 +1101,60 @@ body {
         min-width: 0;
     }
 }
+
+
+/* ADVENT CALENDAR — LOCKED LETTER POPUP */
+.letter-surprise.locked-letter-popup {
+    width: min(90vw, 420px);
+    max-width: calc(100% - 24px);
+    max-height: 85vh;
+    max-height: 85dvh;
+    margin: auto;
+    padding: 32px 25px 25px;
+    background: #fff8ed;
+    color: #4a3030;
+    border: 3px dotted #b49a87;
+    outline: 1px solid #cdb5a2;
+    outline-offset: -9px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 15px 45px rgba(40, 25, 25, .3);
+    animation: lockedPopupAppear .3s ease-out;
+}
+.locked-letter-popup::backdrop {
+    background: rgba(30, 20, 25, .6);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+}
+.locked-ornament { color: #64795c; font-size: 18px; letter-spacing: 3px; margin-bottom: 20px; }
+.locked-letter-popup h2 {
+    font: italic 600 clamp(23px, 5vw, 30px) "Lora", Georgia, serif;
+    color: #91474e; margin: 15px 0 20px;
+}
+.locked-letter-popup p { font: 16px/1.7 "Special Elite", monospace; margin: 0; }
+.locked-date { font: 600 19px "Lora", Georgia, serif; color: #91474e; margin: 22px 0; }
+.locked-button {
+    min-height: 44px; max-width: 100%; padding: 14px 20px;
+    background: #f8e6e3; color: #91474e;
+    border: 3px dotted #b49a87; outline: 1px solid #cdb5a2; outline-offset: -7px;
+    font: 15px "Special Elite", monospace; cursor: pointer; touch-action: manipulation;
+    transition: transform .3s ease, background-color .3s ease;
+}
+.locked-button:focus-visible { outline: 2px solid #91474e; outline-offset: 3px; }
+@media (hover: hover) { .locked-button:hover { transform: translateY(-3px) rotate(-1deg); background: #f1d6d6; } }
+.locked-button:active { transform: scale(.96); }
+.locked-footer { margin-top: 25px; color: #64795c; font-size: 18px; letter-spacing: 4px; }
+@keyframes lockedPopupAppear {
+    from { opacity: 0; transform: translateY(10px) scale(.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (max-width: 600px) {
+    .letter-surprise.locked-letter-popup { width: 90vw; padding: 25px 18px; }
+    .locked-letter-popup p { font-size: 15px; }
+    .locked-date { font-size: 18px; }
+    .locked-button { font-size: 14px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .locked-letter-popup { animation: none !important; }
+    .locked-button { transition: none; }
+}

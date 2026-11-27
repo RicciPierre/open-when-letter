@@ -665,8 +665,50 @@ function showMurdoku(session) {
     render();
 }
 
+// ADVENT CALENDAR — DATE LOCK (Belgian time)
+const CALENDAR_TEST_MODE = false;
+
+function isLetterUnlocked(day, now = Date.now()) {
+    const n = Number(day);
+    if (!Number.isInteger(n) || n < 1 || n > 25) return false;
+    if (CALENDAR_TEST_MODE) return true;
+    return now >= Date.parse(`2026-12-${String(n).padStart(2, '0')}T00:00:00+01:00`);
+}
+
+function showLockedMessage(day) {
+    if (document.querySelector('.locked-letter-popup')) return;
+    const dialog = document.createElement('dialog');
+    dialog.className = 'letter-surprise locked-letter-popup';
+    dialog.setAttribute('aria-labelledby', 'locked-popup-title');
+    dialog.setAttribute('aria-describedby', 'locked-popup-description');
+    dialog.innerHTML = `
+        <div class="locked-ornament" aria-hidden="true">✧ ───── ❦ ───── ✧</div>
+        <h2 id="locked-popup-title">Patience, bebou !</h2>
+        <p id="locked-popup-description">Cette petite surprise<br>doit encore attendre...</p>
+        <div class="locked-date">${Number(day)} décembre 2026</div>
+        <button type="button" class="locked-button" autofocus>Promis, j'attends ♡</button>
+        <div class="locked-footer" aria-hidden="true">❦ &nbsp; ✧ &nbsp; ❦</div>
+    `;
+    dialog.querySelector('.locked-button').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('click', event => {
+        if (event.target !== dialog) return;
+        const r = dialog.getBoundingClientRect();
+        if (event.clientX < r.left || event.clientX > r.right ||
+            event.clientY < r.top || event.clientY > r.bottom) dialog.close();
+    });
+    dialog.addEventListener('close', () => dialog.remove(), { once: true });
+    document.body.append(dialog);
+    dialog.showModal();
+}
+
 function openLetter(day) {
     if (!Object.hasOwn(letters, day)) return showHome();
+    if (!isLetterUnlocked(day)) {
+        history.replaceState({}, '', location.pathname);
+        showHome();
+        showLockedMessage(day);
+        return;
+    }
     if (!home.hidden) homeScroll = home.scrollTop;
     stopLetter();
     const session = {day: Number(day), letter: letters[day], timers: new Set(), media: null};
@@ -691,6 +733,13 @@ function openLetter(day) {
 }
 
 function route() {
+    if (!welcomeAccepted) {
+        stopLetter();
+        home.hidden = true;
+        page.hidden = true;
+        welcomePage.hidden = false;
+        return;
+    }
     const day = new URLSearchParams(location.search).get('letter');
     if (day && Object.hasOwn(letters, day)) openLetter(day);
     else showHome();
@@ -700,6 +749,11 @@ home.querySelectorAll('.envelope').forEach(link => {
     const day = new URL(link.href).searchParams.get('letter');
     link.href = `index.html?letter=${day}`;
     link.addEventListener('click', event => {
+        if (!isLetterUnlocked(day)) {
+            event.preventDefault();
+            showLockedMessage(day);
+            return;
+        }
         if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
         event.preventDefault();
         history.pushState({}, '', `?letter=${day}`);
@@ -714,7 +768,6 @@ page.querySelector('.back-link').addEventListener('click', event => {
 });
 window.addEventListener('popstate', route);
 window.addEventListener('pagehide', () => { if (active?.media) active.media.pause(); });
-route();
 
 function launchBirthdayBalloons() {
 
@@ -941,6 +994,8 @@ const welcomeNo = document.getElementById('welcome-no');
 const welcomeQuestion = document.getElementById('welcome-question');
 
 let welcomeStep = 0;
+let welcomeAccepted = false;
+try { welcomeAccepted = localStorage.getItem('goodBoyAccepted') === 'true'; } catch {}
 
 // Question d'origine
 
@@ -963,7 +1018,9 @@ function showSecondQuestion() {
 // Accès définitif au calendrier
 
 function unlockCalendar() {
-    localStorage.setItem('goodBoyAccepted', 'true');
+    welcomeAccepted = true;
+    try { localStorage.setItem('goodBoyAccepted', 'true'); } catch {}
+    history.replaceState({}, '', location.pathname);
 
     welcomePage.hidden = true;
     home.hidden = false;
@@ -972,13 +1029,11 @@ function unlockCalendar() {
 
 // Vérification lors de l'ouverture du site
 
-if (localStorage.getItem('goodBoyAccepted') === 'true') {
+if (welcomeAccepted) {
 
     welcomePage.hidden = true;
 
-    if (page.hidden) {
-        home.hidden = false;
-    }
+    route();
 
 } else {
 
