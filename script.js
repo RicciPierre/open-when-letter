@@ -904,7 +904,7 @@ function showCalendarGame(session) {
     }
     if (session.letter.game==='cemantix') {
         heading('Cémantix du bebou','Devine le mot secret en proposant des mots proches par leur sens, et non par leur orthographe.');
-        el('p','Version maison : le thermomètre utilise un lexique de proximité préparé pour cette énigme. Un mot inconnu du lexique ne compte pas comme un essai.');
+        el('p','Version maison : cette version utilise un lexique de proximité préparé pour cette énigme. Un mot inconnu du lexique ne compte pas comme un essai.');
         const groups=[[95,'constellation constellationnel astral astre étoiles étoile firmament'],[85,'ciel nuit galaxie univers cosmos astronomie céleste voie lactée'],[75,'planète lune soleil satellite télescope comète météore nébuleuse espace'],[60,'lumière lumineux briller scintiller observation horizon obscurité'],[45,'science physique orbite infini distance temps rêve'],[25,'nature montagne mer forêt voyage amour hiver noël'],[10,'table chaise chat chien voiture maison cuisine pain livre musique travail']];
         const norm=x=>x.trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');const scores=new Map();groups.forEach(([v,words])=>words.split(' ').forEach(w=>scores.set(norm(w),v)));scores.set('voie lactee',85);scores.set('constellation',100);
         const form=el('form','');form.className='word-form';const input=el('input','',form);input.placeholder='Ton mot…';input.setAttribute('aria-label','Mot proposé');input.autocomplete='off';const submit=el('button','Essayer',form);submit.type='submit';submit.className='surprise-button';const s=status();const list=el('div','');list.className='word-results';const tries=new Map();
