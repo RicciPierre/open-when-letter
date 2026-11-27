@@ -358,7 +358,7 @@ function finishOpening(session) {
     if (session.day === 9) launchBirthdayBalloons();
     if (session.day === 12) launchLoveHearts();
     if (session.day === 23) launchGiftRain(session);
-    if (session.day === 24) launchChristmasSnow();
+    if (session.day === 25) launchChristmasSnow();
 }
 
 

@@ -799,8 +799,15 @@ body:has(.murdoku-open) { align-items:flex-start; }
     }
 }
 
-.letter-page { position: relative; z-index: 5; }
-.back-link { z-index: 6; }
+.letter-page {
+    position: relative;
+    z-index: auto;
+}
+
+.back-link {
+    position: relative;
+    z-index: 6;
+}
 
 @media (max-width: 600px) {
     .christmas-gift {
