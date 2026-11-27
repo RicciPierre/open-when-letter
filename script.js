@@ -930,3 +930,43 @@ function showCalendarGame(session) {
     function draw(){board.replaceChildren();target=Math.floor(Math.random()*48);attempts=0;s.textContent='';s.classList.remove('solved');for(let i=0;i<48;i++){const correct=i===target;const short=correct||i%3===0;const beard=correct||i%4===1||i%5===0;const hat=!correct&&short&&beard;const skin=['#f3c5a2','#b97e58','#e2a87e','#8c583e'][i%4];const hair=['#4b3429','#a86c3c','#382b29','#75614d'][i%4];const coat=['#91474e','#64795c','#536d95','#bc9252','#8b7394'][i%5];const b=el('button','',board);b.type='button';b.setAttribute('aria-label',`Personnage ${i+1} : ${hat?'bonnet':short?'cheveux courts':'cheveux longs'}, ${beard?'barbe':'sans barbe'}`);b.innerHTML=`<svg viewBox="0 0 56 76" aria-hidden="true"><path d="M12 76V60Q13 48 28 48Q43 48 44 60V76" fill="${coat}"/><path d="M18 76V65M38 76V65" stroke="#483e37"/><circle cx="28" cy="31" r="17" fill="${hair}"/><ellipse cx="28" cy="33" rx="13" ry="15" fill="${skin}"/>${short?`<path d="M15 27Q14 9 28 12Q43 10 42 27L35 20 21 21Z" fill="${hair}"/>`:`<path d="M13 22Q28 5 43 22V50L36 46V24L20 24V46L13 50Z" fill="${hair}"/>`}${beard?`<path d="M15 35Q16 53 28 51Q40 53 41 35L34 42H22Z" fill="${hair}"/>`:''}<g fill="#40322d"><circle cx="23" cy="31" r="1.5"/><circle cx="33" cy="31" r="1.5"/></g>${hat?`<path d="M11 23Q10 2 28 2Q46 2 45 23Z" fill="${coat}"/><rect x="9" y="20" width="38" height="7" rx="3" fill="#fff4da"/>`:''}<path d="M18 51H38L35 57H23Z" fill="${i%2?'#e6c890':'#e4ddd0'}"/></svg>`;b.onclick=()=>{if(s.classList.contains('solved'))return;attempts++;if(correct){b.classList.add('found');win(s,`Tu as retrouvé le bebou en ${attempts} essai(s) ! ♡`);}else{b.classList.add('miss');s.textContent='Ce n’est pas lui ! Observe ses cheveux, sa barbe et son bonnet.';}};}}
     button('Rejouer',draw);draw();
 }
+
+
+// WELCOME PAGE — GOOD BOY
+
+const welcomePage = document.getElementById('welcome-page');
+const welcomeYes = document.getElementById('welcome-yes');
+const welcomeNo = document.getElementById('welcome-no');
+const welcomeResponse = document.getElementById('welcome-response');
+
+if (sessionStorage.getItem('goodBoyAccepted') === 'true' || !page.hidden) {
+
+    welcomePage.hidden = true;
+
+    if (page.hidden) {
+        home.hidden = false;
+    }
+
+} else {
+
+    welcomePage.hidden = false;
+    home.hidden = true;
+    page.hidden = true;
+
+}
+
+welcomeYes.addEventListener('click', () => {
+
+    sessionStorage.setItem('goodBoyAccepted', 'true');
+
+    welcomePage.hidden = true;
+    home.hidden = false;
+
+});
+
+welcomeNo.addEventListener('click', () => {
+
+    welcomeResponse.textContent =
+        'Mmmmh… Are you sure, bebou ? 👀';
+
+});
