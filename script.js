@@ -83,7 +83,7 @@ const letters = {
         title: "The fourteenth",
         message:
         "Finir à 20h I don't even know her",
-        music: "audio/14.mp3", delay : 2000
+        music: "audio/14.mp3", delay : 3000
     },
 
     "15": {
