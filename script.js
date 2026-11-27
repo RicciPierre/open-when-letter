@@ -932,14 +932,47 @@ function showCalendarGame(session) {
 }
 
 
+
 // WELCOME PAGE — GOOD BOY
 
 const welcomePage = document.getElementById('welcome-page');
 const welcomeYes = document.getElementById('welcome-yes');
 const welcomeNo = document.getElementById('welcome-no');
-const welcomeResponse = document.getElementById('welcome-response');
+const welcomeQuestion = document.getElementById('welcome-question');
 
-if (sessionStorage.getItem('goodBoyAccepted') === 'true' || !page.hidden) {
+let welcomeStep = 0;
+
+// Question d'origine
+
+function resetWelcomeQuestion() {
+    welcomeStep = 0;
+
+    welcomeQuestion.textContent =
+        'As-tu été un good boy ?';
+}
+
+// Deuxième question
+
+function showSecondQuestion() {
+    welcomeStep = 1;
+
+    welcomeQuestion.textContent =
+        'Mmmmh… Are you sure, bebou ? 👀';
+}
+
+// Accès définitif au calendrier
+
+function unlockCalendar() {
+    localStorage.setItem('goodBoyAccepted', 'true');
+
+    welcomePage.hidden = true;
+    home.hidden = false;
+    page.hidden = true;
+}
+
+// Vérification lors de l'ouverture du site
+
+if (localStorage.getItem('goodBoyAccepted') === 'true') {
 
     welcomePage.hidden = true;
 
@@ -953,20 +986,30 @@ if (sessionStorage.getItem('goodBoyAccepted') === 'true' || !page.hidden) {
     home.hidden = true;
     page.hidden = true;
 
+    resetWelcomeQuestion();
+
 }
+
+// Bouton Oui
 
 welcomeYes.addEventListener('click', () => {
 
-    sessionStorage.setItem('goodBoyAccepted', 'true');
-
-    welcomePage.hidden = true;
-    home.hidden = false;
+    if (welcomeStep === 0) {
+        unlockCalendar();
+    } else {
+        resetWelcomeQuestion();
+    }
 
 });
 
+// Bouton Non
+
 welcomeNo.addEventListener('click', () => {
 
-    welcomeResponse.textContent =
-        'Mmmmh… Are you sure, bebou ? 👀';
+    if (welcomeStep === 0) {
+        showSecondQuestion();
+    } else {
+        resetWelcomeQuestion();
+    }
 
 });
