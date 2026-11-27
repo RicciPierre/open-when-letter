@@ -39,7 +39,7 @@ const letters = {
         title: "The seventh",
         message:
         "Qu'est-ce qui est magnifique mais me réveille de façon sporadique ?",
-        popup : { image : "images/7.jpeg", delay : 1000 }
+        popup : { image : "images/7.jpeg", delay : 2000 }
     },
 
     "8": {
@@ -83,7 +83,7 @@ const letters = {
         title: "The fourteenth",
         message:
         "Finir à 20h I don't even know her",
-        music: "audio/14.mp3", delay : 1500
+        music: "audio/14.mp3", delay : 2000
     },
 
     "15": {
@@ -97,7 +97,7 @@ const letters = {
         title: "The sixteenth",
         message:
         "La semaine est bientôt fi...",
-        popup : { image : "images/16.gif", delay : 1000 }
+        popup : { image : "images/16.gif", delay : 2000 }
     },
 
     "17": { title: "The seventeenth", message: "", game: "cemantix" },
@@ -135,7 +135,7 @@ const letters = {
     "23": {
         title: "The twenty-third",
         message:
-        "If you're thinking about me right now, just know that there's a very good chance I'm thinking about you too."
+        "J-1 avant les cadeaux mouhahahaahahha"
     },
 
     "24": {
@@ -192,7 +192,7 @@ function stopLetter() {
     document.querySelectorAll('.birthday-balloon, .love-heart, .christmas-snow, .gift-rain').forEach(el => el.remove());
     saint.classList.remove('show');
     extras.replaceChildren();
-    page.classList.remove('murdoku-open');
+    page.classList.remove('murdoku-open', 'letter-open', 'reading-open', 'countdown-open');
     text.classList.add('hidden');
     text.scrollTop = 0;
 }
@@ -201,6 +201,7 @@ function showHome() {
     stopLetter();
     page.hidden = true;
     home.hidden = false;
+    window.scrollTo(0, 0);
     home.scrollTop = homeScroll;
 }
 
@@ -336,6 +337,9 @@ function finishOpening(session) {
     gif.src = finalLetter.src;
     text.classList.remove('hidden');
     const item = session.letter;
+    page.classList.add('letter-open');
+    if (item.countdown) page.classList.add('countdown-open');
+    if (item.message.length > 160 || item.music || (item.video && item.videoDelay === 0) || item.countdown) page.classList.add('reading-open');
     if (item.countdown) startHolidayCountdown(session);
     if (item.game) showCalendarGame(session);
     if (item.question) later(session, () => showSaintNicolasQuestion(session), item.questionDelay ?? 0);
@@ -394,7 +398,16 @@ function startHolidayCountdown(session) {
         const clock = document.createElement('span');
         clock.className = 'holiday-countdown';
 
-        clock.textContent = `${days} j ${pad(hours)} h ${pad(minutes)} min ${pad(seconds)} s`;
+        for (const [value, label] of [[days, 'jours'], [hours, 'heures'], [minutes, 'minutes'], [seconds, 'secondes']]) {
+            const unit = document.createElement('span');
+            unit.className = 'countdown-unit';
+            const number = document.createElement('strong');
+            number.textContent = pad(value);
+            const caption = document.createElement('small');
+            caption.textContent = label;
+            unit.append(number, caption);
+            clock.append(unit);
+        }
 
         message.append(clock, document.createTextNode(' avant les vacances !!!'));
 
@@ -415,6 +428,7 @@ function launchGiftRain(session) {
 
     const rain = document.createElement('div');
     rain.className = 'gift-rain';
+    rain.setAttribute('aria-hidden', 'true');
     document.body.append(rain);
 
     const colors = [
@@ -454,15 +468,7 @@ function launchGiftRain(session) {
         rain.append(gift);
     }
 
-    function monitor() {
-        if (active !== session) {
-            rain.remove();
-            return;
-        }
-        requestAnimationFrame(monitor);
-    }
-
-    requestAnimationFrame(monitor);
+    // stopLetter removes the entire gift layer on navigation.
 }
 
 
@@ -654,6 +660,7 @@ function openLetter(day) {
     active = session;
     home.hidden = true;
     page.hidden = false;
+    window.scrollTo(0, 0);
     document.getElementById('letter-title').innerHTML = session.letter.title;
     document.getElementById('letter-message').textContent = session.letter.message.replace(/<br\s*\/?>/gi, '\n');
     prepareMedia(session); // Must run synchronously inside the click handler.
